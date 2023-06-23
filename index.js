@@ -186,6 +186,87 @@ const imgAdded = (e) => {
     reader.readAsDataURL(file)
 }
 
+const addTextToCanvas = (content) => {
+    const text = new fabric.Text(content, {
+        left: 50,
+        top: 50,
+        fontSize: 20,
+        fill: 'red'
+      });
+  
+      canvas.add(text);
+      canvas.renderAll();
+}
+
+const addImageToCanvas = (imagePath, xCoordinate, yCoordinate) => {
+    fabric.Image.fromURL(imagePath, function(img) {
+        img.set({
+          left: xCoordinate,  // Custom X-coordinate
+          top: yCoordinate,    // Custom Y-coordinate
+          scaleX: 0.5, // Optional: Adjust the scale of the image
+          scaleY: 0.5,
+        });
+        canvas.add(img);
+        canvas.renderAll();
+      });
+}
+
+const exportCanvasToJpg = () => {
+    // Export canvas to image format
+    var dataURL = canvas.toDataURL({ format: 'jpeg', quality: 0.8 });
+
+    // Create an anchor element with the image data as the href
+    var link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'canvas_image.jpg';
+
+    // Simulate a click event on the anchor to trigger the download
+    link.click();
+}
+
+const exportCanvasToJSON = () => {
+    const json = JSON.stringify(canvas.toJSON());
+    return json;
+}
+
+const loadJsonToCanvas = (jsonData) => {
+      // Load JSON data into canvas
+    canvas.loadFromJSON(jsonData, function () {
+      // Render canvas after JSON is loaded
+      canvas.renderAll();
+    });
+}
+
+const invertCanvasBy180Degree = () => {
+    // Invert canvas by 180 degrees
+    canvas.setFlipX(true);
+    canvas.setFlipY(true);
+    canvas.renderAll();
+}
+
+const deleteElementsOnCanvas = () => {
+    // Step 1: Identify the object you want to delete
+    var objectToDelete = canvas.getActiveObject(); // Or you can retrieve the object using other methods
+
+    // Step 2: Get a reference to the canvas and the object you want to delete
+
+    // Step 3: Remove the object from the canvas
+    canvas.remove(objectToDelete);
+
+    // Step 4: Optionally, destroy the object
+    objectToDelete.destroy();
+}
+
+const copyElementOnCanvas = (selectedElement) => {
+    const clonedObject = fabric.util.object.clone(selectedElement);
+    clonedObject.set({
+        left: 300,
+        top: 300
+    });
+
+    canvas.add(clonedObject);
+}
+
 const canvas = initCanvas('canvas')
 const svgState = {}
 let mousePressed = false
