@@ -16,7 +16,7 @@ const setBackground = (url, canvas) => {
     })
 }
 
-const toggleMode = (mode) => {
+const toggleMode = (mode) => {    
     if (mode === modes.pan) {
         if (currentMode === modes.pan) {
             currentMode = ''
@@ -33,6 +33,7 @@ const toggleMode = (mode) => {
         } else {
             currentMode = modes.drawing
             canvas.freeDrawingBrush.color = color
+            canvas.freeDrawingBrush.width = 5
             canvas.isDrawingMode = true
             canvas.renderAll()
         }      
@@ -289,7 +290,14 @@ setPanEvents(canvas)
 const inputFile = document.getElementById('myImg');
 inputFile.addEventListener('change', imgAdded, {passive:true})
 
-reader.addEventListener("load", () => {
+const lineThicknessSlider = document.getElementById('lineThickness');
+// Event listener for the line thickness change event
+lineThicknessSlider.addEventListener('input', function() {
+    canvas.freeDrawingBrush.width = parseInt(lineThicknessSlider.value);
+    canvas.requestRenderAll();
+  });
+
+  reader.addEventListener("load", () => {
     fabric.Image.fromURL(reader.result, img => {
         canvas.add(img)
         canvas.requestRenderAll()

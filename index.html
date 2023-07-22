@@ -15,7 +15,11 @@
     <input id='colorPicker' value="#000000" data-jscolor="">
     <button onclick="clearCanvas(canvas, svgState)">Clear</button>
     <button onclick="restoreCanvas(canvas, svgState, bgUrl)">Restore</button>
-    
+    <div>
+        <label for="lineThickness">Line Thickness:</label>
+        <input type="range" id="lineThickness" min="1" max="10" value="5">
+    </div>
+        
     <canvas id="canvas"></canvas>
 
     <div id="bottomButtons">
