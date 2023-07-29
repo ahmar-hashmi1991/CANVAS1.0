@@ -295,9 +295,45 @@ const lineThicknessSlider = document.getElementById('lineThickness');
 lineThicknessSlider.addEventListener('input', function() {
     canvas.freeDrawingBrush.width = parseInt(lineThicknessSlider.value);
     canvas.requestRenderAll();
-  });
+});
 
-  reader.addEventListener("load", () => {
+// Get the pressure value element
+const pressureValue = document.getElementById('pressureValue');
+
+// Set initial pressure value
+let currentPressure = 0;
+
+// Event listeners for pointer events
+canvas.on('pointerdown', function(e) {
+    currentPressure = e.pressure;
+    pressureValue.innerText = currentPressure.toFixed(2);
+});
+  
+canvas.on('pointermove', function(e) {
+if (e.pressure && e.pressure !== currentPressure) {
+    currentPressure = e.pressure;
+    pressureValue.innerText = currentPressure.toFixed(2);
+
+    canvas.freeDrawingBrush.width = mapPressureToThickness(currentPressure);
+    canvas.requestRenderAll();
+}
+});
+  
+canvas.on('pointerup', function() {
+currentPressure = 0;
+pressureValue.innerText = currentPressure.toFixed(2);
+});
+
+// Function to map pressure to line thickness
+function mapPressureToThickness(pressure) {
+const minThickness = parseInt(lineThicknessSlider.min);
+const maxThickness = parseInt(lineThicknessSlider.max);
+const pressureRange = 1 - minThickness; // Assume pressure ranges from 0 to 1
+
+return minThickness + Math.round(pressure * pressureRange);
+}
+
+reader.addEventListener("load", () => {
     fabric.Image.fromURL(reader.result, img => {
         canvas.add(img)
         canvas.requestRenderAll()
