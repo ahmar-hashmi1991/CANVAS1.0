@@ -333,6 +333,31 @@ const pressureRange = 1 - minThickness; // Assume pressure ranges from 0 to 1
 return minThickness + Math.round(pressure * pressureRange);
 }
 
+const undoStack = [];
+
+canvas.on('object:added', saveToUndoStack);
+canvas.on('object:modified', saveToUndoStack);
+canvas.on('object:removed', saveToUndoStack);
+canvas.on('mouse:down', saveToUndoStack);
+canvas.on('pointerdown', saveToUndoStack);
+
+function saveToUndoStack() {
+  const json = JSON.stringify(canvas);
+  undoStack.push(json);
+}
+  
+document.getElementById('undoBtn').addEventListener('click', () => {
+    if (undoStack.length > 1) {
+      undoStack.pop();
+      const previousState = undoStack[undoStack.length - 1];
+      canvas.clear();
+      canvas.loadFromJSON(previousState, () => {
+        canvas.renderAll();
+      });
+    }
+  });
+
+
 reader.addEventListener("load", () => {
     fabric.Image.fromURL(reader.result, img => {
         canvas.add(img)
