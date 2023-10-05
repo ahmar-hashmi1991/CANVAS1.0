@@ -42,7 +42,7 @@ const toggleMode = (mode) => {
 
 const setPanEvents = (canvas) => {
     canvas.on('mouse:move', (event) => {
-        // console.log(event)
+        console.log(event)
         if (mousePressed && currentMode === modes.pan) {
             canvas.setCursor('grab')
             canvas.renderAll()
@@ -53,6 +53,7 @@ const setPanEvents = (canvas) => {
     })
     // keep track of mouse down/up
     canvas.on('mouse:down', (event) => {
+        console.log(event)
         mousePressed = true;
         if (currentMode === modes.pan) {
             canvas.setCursor('grab')
@@ -60,6 +61,7 @@ const setPanEvents = (canvas) => {
         }
     })
     canvas.on('mouse:up', (event) => {
+        console.log(event)
         mousePressed = false
         canvas.setCursor('default')
         canvas.renderAll()
@@ -268,7 +270,25 @@ const copyElementOnCanvas = (selectedElement) => {
     canvas.add(clonedObject);
 }
 
-const canvas = initCanvas('canvas')
+// Function to handle pointer events
+function handlePointerEvent(event) {
+    // Use event.clientX and event.clientY to get the pointer coordinates
+    const x = event.clientX;
+    const y = event.clientY;
+
+    // Now, you can handle the event based on the library or conditions
+    if (event.target === fabricCanvas.lowerCanvasEl) {
+        // Event on Fabric.js canvas
+        console.log('Pointer event on Fabric.js:', x, y);
+    } else {
+        // Event on Paper.js canvas
+        console.log('Pointer event on Paper.js:', x, y);
+    }
+}
+
+const canvas = initCanvas('combinedCanvas')
+paper.setup('combinedCanvas');
+
 const svgState = {}
 let mousePressed = false
 let color = '#000000'
@@ -284,8 +304,48 @@ const modes = {
 const reader = new FileReader()
 
 setColorListener()
-setBackground(bgUrl, canvas)
-setPanEvents(canvas)
+// setBackground(bgUrl, canvas)
+// setPanEvents(canvas)
+// Add event listener for pointer events (example for pointer devices)
+
+// Handle pressure input (for demonstration purposes)
+const canvasElem = document.getElementById('combinedCanvas');
+
+canvasElem.addEventListener('pointermove', handlePointerEvent); 
+
+// function (event) {
+//     console.log('Touch Move Event');
+//     console.log(event)
+//     if (event.pointerType === 'pen' && typeof event.pressure !== 'undefined') {
+//         pressure = event.pressure; // Update pressure sensitivity value
+//         drawVectorWithPaper(); // Redraw Paper.js path with adjusted line thickness
+//     }
+// });
+// canvas.on('pointer:move', function (event) {
+//     // Access pressure sensitivity value from the event
+//     console.log(event)
+//     pressure = event.event.pressure || 0;
+//     if (pressure && pressure !== currentPressure) {
+//         currentPressure = pressure;
+//         pressureValue.innerText = currentPressure.toFixed(2);
+    
+//         canvas.freeDrawingBrush.width = mapPressureToThickness(currentPressure);
+//         canvas.requestRenderAll();
+//     }
+// });
+
+// Event listeners for pointer events
+canvasElem.addEventListener('touchdown', function(e) {
+    console.log(e)
+    currentPressure = e.pressure;
+    pressureValue.innerText = currentPressure.toFixed(2);
+});
+
+canvasElem.addEventListener('touchup', function(e) {
+    console.log(e)
+    currentPressure = 0;
+    pressureValue.innerText = currentPressure.toFixed(2);
+});
 
 const inputFile = document.getElementById('myImg');
 inputFile.addEventListener('change', imgAdded, {passive:true})
@@ -303,59 +363,43 @@ const pressureValue = document.getElementById('pressureValue');
 // Set initial pressure value
 let currentPressure = 0;
 
-// Event listeners for pointer events
-canvas.on('pointerdown', function(e) {
-    currentPressure = e.pressure;
-    pressureValue.innerText = currentPressure.toFixed(2);
-});
-  
-canvas.on('pointermove', function(e) {
-if (e.pressure && e.pressure !== currentPressure) {
-    currentPressure = e.pressure;
-    pressureValue.innerText = currentPressure.toFixed(2);
-
-    canvas.freeDrawingBrush.width = mapPressureToThickness(currentPressure);
-    canvas.requestRenderAll();
-}
-});
-  
-canvas.on('pointerup', function() {
-currentPressure = 0;
-pressureValue.innerText = currentPressure.toFixed(2);
-});
-
 // Function to map pressure to line thickness
 function mapPressureToThickness(pressure) {
-const minThickness = parseInt(lineThicknessSlider.min);
-const maxThickness = parseInt(lineThicknessSlider.max);
-const pressureRange = 1 - minThickness; // Assume pressure ranges from 0 to 1
-
-return minThickness + Math.round(pressure * pressureRange);
+    console.log("pressure >> ", pressure);
+    const minThickness = parseInt(lineThicknessSlider.min);
+    console.log("minThickness >> ", minThickness);
+    const maxThickness = parseInt(lineThicknessSlider.max);
+    console.log("maxThickness >> ", maxThickness);
+    const pressureRange = 1 - minThickness; // Assume pressure ranges from 0 to 1
+    console.log("pressureRange >> ", pressureRange);
+    let res =  minThickness + Math.round(pressure * pressureRange);
+    console.log("res >> ", res);
+    return res;
 }
 
-const undoStack = [];
+// const undoStack = [];
 
-canvas.on('object:added', saveToUndoStack);
-canvas.on('object:modified', saveToUndoStack);
-canvas.on('object:removed', saveToUndoStack);
-canvas.on('mouse:down', saveToUndoStack);
-canvas.on('pointerdown', saveToUndoStack);
+// canvas.on('object:added', saveToUndoStack);
+// canvas.on('object:modified', saveToUndoStack);
+// canvas.on('object:removed', saveToUndoStack);
+// canvas.on('mouse:down', saveToUndoStack);
+// canvas.on('pointerdown', saveToUndoStack);
 
-function saveToUndoStack() {
-  const json = JSON.stringify(canvas);
-  undoStack.push(json);
-}
+// function saveToUndoStack() {
+//   const json = JSON.stringify(canvas);
+//   undoStack.push(json);
+// }
   
-document.getElementById('undoBtn').addEventListener('click', () => {
-    if (undoStack.length > 1) {
-      undoStack.pop();
-      const previousState = undoStack[undoStack.length - 1];
-      canvas.clear();
-      canvas.loadFromJSON(previousState, () => {
-        canvas.renderAll();
-      });
-    }
-  });
+// document.getElementById('undoBtn').addEventListener('click', () => {
+//     if (undoStack.length > 1) {
+//       undoStack.pop();
+//       const previousState = undoStack[undoStack.length - 1];
+//       canvas.clear();
+//       canvas.loadFromJSON(previousState, () => {
+//         canvas.renderAll();
+//       });
+//     }
+//   });
 
 
 reader.addEventListener("load", () => {
