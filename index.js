@@ -11,7 +11,7 @@ const initCanvas = (id) => {
   // Set some options...
   brush.width = 10;
   brush.color = "#000";
-  brush.disableTouch = true; // disable touch and only use mouse and pen devices
+  // brush.disableTouch = true; // disable touch and only use mouse and pen devices
   brush.pressureManager.fallback = 0.3; // fallback value for mouse and touch events
 
   return canvas;
