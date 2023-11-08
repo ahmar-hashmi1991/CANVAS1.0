@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
-
-
-
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
     <button onclick="toggleMode(modes.pan)">Toggle Pan</button>
     <button onclick="toggleMode(modes.drawing)">Toggle Drawing</button>
-    <input id='colorPicker' value="#000000" data-jscolor="">
+    <input id="colorPicker" value="#000000" data-jscolor="" />
     <button onclick="clearCanvas(canvas, svgState)">Clear</button>
     <button onclick="restoreCanvas(canvas, svgState, bgUrl)">Restore</button>
     <div>
-        <label for="lineThickness">Line Thickness:</label>
-        <input type="range" id="lineThickness" min="1" max="10" value="5">
+      <label for="lineThickness">Line Thickness:</label>
+      <input type="range" id="lineThickness" min="1" max="10" value="5" />
     </div>
 
-    <div>
+    <!--<div>
         <label for="pressure">Pressure:</label>
         <span id="pressureValue">0</span>
-      </div>
-        
-    <canvas id="combinedCanvas" width="400" height="400" style="border: 1px solid black;"></canvas>
+    </div>-->
+
+    <canvas
+      id="canvas"
+      width="400"
+      height="400"
+      style="border: 1px solid black"
+    ></canvas>
     <button id="undoBtn">Undo</button>
-  
+
     <div id="bottomButtons">
-        <div class="buttonsWrapper">
-            <p class="buttonsTitle">Objects</p>
-            <div class="buttons">
-                <button onclick="createRect(canvas)">Rect</button>
-                <button onclick="createCirc(canvas)">Circ</button>
-                <button onclick="groupObjects(canvas, group, true)">Group</button>
-                <button onclick="groupObjects(canvas, group, false)">Ungroup</button>
-            </div>
-
+      <div class="buttonsWrapper">
+        <p class="buttonsTitle">Objects</p>
+        <div class="buttons">
+          <button onclick="createRect(canvas)">Rect</button>
+          <button onclick="createCirc(canvas)">Circ</button>
+          <button onclick="groupObjects(canvas, group, true)">Group</button>
+          <button onclick="groupObjects(canvas, group, false)">Ungroup</button>
         </div>
+      </div>
 
-        <div class="buttonsWrapper">
-            <p class="buttonsTitle">Image</p>
-            <input id="myImg" type="file" accept="image/*">
-        </div>
+      <div class="buttonsWrapper">
+        <p class="buttonsTitle">Image</p>
+        <input id="myImg" type="file" accept="image/*" />
+      </div>
     </div>
 
-<script src="./lib/jscolor.js"></script>
-<script src="./lib/fabric.min.js"></script>
-<script src="./lib/paper-full.min.js"></script>
-<script src="index.js"></script>
-</body>
+    <script src="./lib/jscolor.js"></script>
+    <script src="./lib/fabric.min.js"></script>
+    <script src="./lib/psbrush.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>

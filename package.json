@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@arch-inc/fabricjs-psbrush": "^0.0.20",
     "lite-server": "^2.5.4"
   }
 }
