@@ -18,10 +18,14 @@ const initCanvas = (id) => {
 };
 
 const setBackground = (url, canvas) => {
-  fabric.Image.fromURL(url, (img) => {
-    canvas.backgroundImage = img;
-    canvas.renderAll();
-  });
+  fabric.Image.fromURL(
+    url,
+    (img) => {
+      canvas.backgroundImage = img;
+      canvas.renderAll();
+    },
+    { crossOrigin: "Anonymous" }
+  );
 };
 
 const toggleMode = (mode) => {
@@ -212,16 +216,20 @@ const addTextToCanvas = (content) => {
 };
 
 const addImageToCanvas = (imagePath, xCoordinate, yCoordinate) => {
-  fabric.Image.fromURL(imagePath, function (img) {
-    img.set({
-      left: xCoordinate, // Custom X-coordinate
-      top: yCoordinate, // Custom Y-coordinate
-      scaleX: 0.5, // Optional: Adjust the scale of the image
-      scaleY: 0.5,
-    });
-    canvas.add(img);
-    canvas.renderAll();
-  });
+  fabric.Image.fromURL(
+    imagePath,
+    function (img) {
+      img.set({
+        left: xCoordinate, // Custom X-coordinate
+        top: yCoordinate, // Custom Y-coordinate
+        scaleX: 0.5, // Optional: Adjust the scale of the image
+        scaleY: 0.5,
+      });
+      canvas.add(img);
+      canvas.renderAll();
+    },
+    { crossOrigin: "Anonymous" }
+  );
 };
 
 const exportCanvasToJpg = () => {
@@ -418,6 +426,6 @@ reader.addEventListener("load", () => {
       canvas.add(img);
       canvas.requestRenderAll();
     },
-    { passive: true }
+    { crossOrigin: "Anonymous", passive: true }
   );
 });
